@@ -1,0 +1,30 @@
+pragma solidity ^0.8.0;
+
+contract LandOwnership {
+    // Struct to represent ownership details of a land
+    struct Ownership {
+        address owner;
+        uint256 price;
+    }
+
+    // Mapping to store ownership details of lands
+    mapping (uint256 => Ownership) public landOwnership;
+
+    // Function to register ownership details of a land
+    function registerLandOwnership(uint256 _landId, uint256 _price) public {
+        require(landOwnership[_landId].owner == address(0), "Land already owned.");
+        landOwnership[_landId] = Ownership(msg.sender, _price);
+    }
+
+    // Function to view ownership details of a land
+    function viewLandOwnership(uint256 _landId) public view returns (address, uint256) {
+        require(landOwnership[_landId].owner != address(0), "Land not registered.");
+        return (landOwnership[_landId].owner, landOwnership[_landId].price);
+    }
+
+    // Function to transfer ownership of a land
+    function transferLandOwnership(uint256 _landId, address _newOwner) public {
+        require(landOwnership[_landId].owner == msg.sender, "Only owner can transfer ownership.");
+        landOwnership[_landId].owner = _newOwner;
+    }
+}
